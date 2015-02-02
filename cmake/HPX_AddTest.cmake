@@ -83,3 +83,30 @@ macro(add_hpx_regression_test category name)
   add_hpx_test("tests.regressions.${category}" ${name} ${ARGN})
 endmacro()
 
+macro(add_hpx_header_test name)
+  set(options)
+  set(one_value_args EXECUTABLE)
+  set(multi_value_args ARGS)
+  cmake_parse_arguments(${name} "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
+  
+  if(NOT ${name}_EXECUTABLE)
+    set(${name}_EXECUTABLE ${name})
+  endif()
+
+  if(TARGET ${${name}_EXECUTABLE}_test_exe)
+    set(cmd "$<TARGET_FILE:${${name}_EXECUTABLE}_test_exe>")
+  else()
+    set(cmd "${${name}_EXECUTABLE}")
+  endif()
+
+  set(args)
+  foreach(arg ${${name}_ARGS})
+    set(args ${args} "'${arg}'")
+  endforeach()
+  set(args ${args} "-v" "--" ${args})
+  
+  add_test(
+    NAME "tests.header.${name}"
+    COMMAND ${cmd} ${args})
+endmacro()
+

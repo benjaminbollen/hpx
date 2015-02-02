@@ -20,6 +20,11 @@ if(HPX_BUILD_TESTS_UNIT)
     ${subdirs} unit)
 endif()
 
+#if(HPX_BUILD_TESTS_HEDADER)
+  set(subdirs
+    ${subdirs} header)
+#endif()
+
 foreach(subdir ${subdirs})
   add_hpx_pseudo_target(tests.${subdir})
   add_subdirectory(${subdir})
